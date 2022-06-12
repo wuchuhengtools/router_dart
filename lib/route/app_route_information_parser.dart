@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../hi_router.dart';
 
 class AppRouteInformationParser extends RouteInformationParser<HiRouter> {
-  final HiRouterHiRouter appRoutePath;
+  final HiRouter appRoutePath;
 
   AppRouteInformationParser(this.appRoutePath);
 
