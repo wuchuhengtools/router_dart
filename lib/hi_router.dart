@@ -1,8 +1,7 @@
-library easy_router;
+library hi_router;
 
-import 'package:easy_router/route/route_abstract.dart';
 import 'package:flutter/material.dart';
-
+import 'route/route_abstract.dart';
 import 'pages/unknown_page.dart';
 import 'route/app_route_information_parser.dart';
 import 'route/app_router_delegate.dart';
@@ -61,7 +60,7 @@ class EasyRoute extends RouteAbstract {
     _pushPageInfoCallback(pageInfo);
   }
 
-  RoutePageInfo Function(RoutePageInfo pageInfo)? before;
+  Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
 
   /// 构建路由route
   Widget build(BuildContext context, String title) {

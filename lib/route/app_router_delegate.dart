@@ -1,7 +1,7 @@
-import 'package:easy_router/route/route_abstract.dart';
+import 'route_abstract.dart';
 import 'package:flutter/material.dart';
 
-import '../easy_router.dart';
+import '../hi_router.dart';
 
 class AppRouterDelegate extends RouterDelegate<EasyRoute>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<EasyRoute> {
@@ -17,18 +17,20 @@ class AppRouterDelegate extends RouterDelegate<EasyRoute>
 
   final EasyRoute appRoutePath;
 
-  RoutePageInfo Function(RoutePageInfo pageInfo)? before;
+  Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
 
   AppRouterDelegate(this.appRoutePath, this.before)
       : navigatorKey = GlobalKey<NavigatorState>() {
     appRoutePath.registerPushCallback((RoutePageInfo pageInfo) {
       if (before != null) {
-        pushPageInfo = before!(pageInfo);
-        appRoutePath.currentPage = pushPageInfo!;
+        before!(pageInfo).then((newPageInfo) {
+          pushPageInfo = newPageInfo;
+          notifyListeners();
+        });
       } else {
         pushPageInfo = pageInfo;
+        notifyListeners();
       }
-      notifyListeners();
     });
   }
 
@@ -41,6 +43,32 @@ class AppRouterDelegate extends RouterDelegate<EasyRoute>
   registerTrackIndex(RoutePageInfo page) {
     pageTrack = [...pageTrack, page.pageFunc()];
     pageTrackIndexMapRoute[pageTrack.length - 1] = page.location;
+  }
+
+  bool handlePopPage(Route<dynamic> route, dynamic result) {
+    if (!route.didPop(result)) {
+      return false;
+    }
+    pageTrack.removeLast();
+    String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
+    var currentPage = appRoutePath.getRoutePageByRoute(currentRoute);
+    // 处理返回hook的返回页面是否与当前页面不同，不同则进行替换
+    if (before != null) {
+      before!(currentPage).then((newPage) {
+        if (newPage.location == currentPage.location) {
+          appRoutePath.currentPage = currentPage;
+        } else {
+          appRoutePath.currentPage = newPage;
+          replaceCurrentPageInfo = newPage;
+        }
+        notifyListeners();
+      });
+    } else {
+      appRoutePath.currentPage = currentPage;
+      notifyListeners();
+    }
+
+    return true;
   }
 
   @override
@@ -88,29 +116,7 @@ class AppRouterDelegate extends RouterDelegate<EasyRoute>
     return Navigator(
       key: navigatorKey,
       pages: pageTrack,
-      onPopPage: (route, result) {
-        if (!route.didPop(result)) {
-          return false;
-        }
-        pageTrack.removeLast();
-        String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
-        var currentPage = appRoutePath.getRoutePageByRoute(currentRoute);
-        // 处理返回hook的返回页面是否与当前页面不同，不同则进行替换
-        if (before != null) {
-          var newPage = before!(currentPage);
-          if (newPage.location == currentPage.location) {
-            appRoutePath.currentPage = currentPage;
-          } else {
-            appRoutePath.currentPage = newPage;
-            replaceCurrentPageInfo = newPage;
-          }
-        } else {
-          appRoutePath.currentPage = currentPage;
-        }
-        notifyListeners();
-
-        return true;
-      },
+      onPopPage: handlePopPage,
     );
   }
 
