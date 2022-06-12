@@ -1,6 +1,6 @@
-library easy_route;
+library easy_router;
 
-import 'package:easy_route/route/route_abstract.dart';
+import 'package:easy_router/route/route_abstract.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/unknown_page.dart';

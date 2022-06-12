@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:easy_route/easy_route.dart';
+import 'package:easy_route/easy_router.dart';
 
 void main() {
   test('adds one to input values', () {

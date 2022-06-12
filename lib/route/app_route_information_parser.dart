@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../easy_route.dart';
+import '../easy_router.dart';
 
 class AppRouteInformationParser extends RouteInformationParser<EasyRoute> {
   final EasyRoute appRoutePath;

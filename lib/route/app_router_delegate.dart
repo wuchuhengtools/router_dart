@@ -1,7 +1,7 @@
-import 'package:easy_route/route/route_abstract.dart';
+import 'package:easy_router/route/route_abstract.dart';
 import 'package:flutter/material.dart';
 
-import '../easy_route.dart';
+import '../easy_router.dart';
 
 class AppRouterDelegate extends RouterDelegate<EasyRoute>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<EasyRoute> {
