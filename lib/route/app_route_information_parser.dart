@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 
 import '../hi_router.dart';
 
-class AppRouteInformationParser extends RouteInformationParser<EasyRoute> {
-  final EasyRoute appRoutePath;
+class AppRouteInformationParser extends RouteInformationParser<HiRouter> {
+  final HiRouterHiRouter appRoutePath;
 
   AppRouteInformationParser(this.appRoutePath);
 
   /// app首次启动时，解析浏览器的url
   @override
-  Future<EasyRoute> parseRouteInformation(
+  Future<HiRouter> parseRouteInformation(
       RouteInformation routeInformation) async {
     String location = routeInformation.location!;
     // 应用已经启动，正进行路由跳转
@@ -23,7 +23,7 @@ class AppRouteInformationParser extends RouteInformationParser<EasyRoute> {
   }
 
   @override
-  RouteInformation restoreRouteInformation(EasyRoute path) {
+  RouteInformation restoreRouteInformation(HiRouter path) {
     String location = appRoutePath.currentPage!.location;
     return RouteInformation(location: location);
   }

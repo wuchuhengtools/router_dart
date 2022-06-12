@@ -22,9 +22,9 @@ The system's navigator page management and the system's routing are not unified,
 ## Usage
 
 ```dart
+import 'package:flutter/material.dart';
 import 'package:hi_router/hi_router.dart';
 import 'package:hi_router/route/route_abstract.dart';
-import 'package:flutter/material.dart';
 
 void main() {
   runApp(App());
@@ -46,6 +46,7 @@ class HomePage extends Page {
     );
   }
 }
+
 class _HomePageState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -78,6 +79,7 @@ class LoginPage extends Page {
     );
   }
 }
+
 class _LoginPageState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -85,15 +87,15 @@ class _LoginPageState extends StatelessWidget {
       appBar: AppBar(),
       body: Center(
           child: Column(
-            children: [
-              const Text("Login page."),
-              TextButton(
-                  onPressed: () {
-                    RoutePath.getAppPathInstance().push('/34343');
-                  },
-                  child: Text("404"))
-            ],
-          )),
+        children: [
+          const Text("Login page."),
+          TextButton(
+              onPressed: () {
+                RoutePath.getAppPathInstance().push('/34343');
+              },
+              child: Text("404"))
+        ],
+      )),
     );
   }
 }
@@ -109,12 +111,14 @@ class UnknownPage extends Page {
     );
   }
 }
+
 class UnknownPageRender extends StatefulWidget {
   const UnknownPageRender({Key? key}) : super(key: key);
 
   @override
   State<UnknownPageRender> createState() => _UnknownPageRenderState();
 }
+
 class _UnknownPageRenderState extends State<UnknownPageRender> {
   @override
   Widget build(BuildContext context) {
@@ -127,10 +131,10 @@ class _UnknownPageRenderState extends State<UnknownPageRender> {
 }
 
 class RoutePath {
-  static EasyRoute? _appRoutePathInstance;
+  static HiRouter? _appRoutePathInstance;
 
-  static EasyRoute getAppPathInstance() {
-    _appRoutePathInstance ??= EasyRoute({
+  static HiRouter getAppPathInstance() {
+    _appRoutePathInstance ??= HiRouter({
       '/': () => HomePage(),
       '/login': () => LoginPage(),
     });
@@ -152,7 +156,6 @@ class _AppState extends State<App> {
     return RoutePath.getAppPathInstance().build(context, 'App title.');
   }
 }
-
 ```
 
 ## Additional information

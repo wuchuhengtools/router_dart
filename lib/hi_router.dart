@@ -6,11 +6,11 @@ import 'pages/unknown_page.dart';
 import 'route/app_route_information_parser.dart';
 import 'route/app_router_delegate.dart';
 
-class EasyRoute extends RouteAbstract {
+class HiRouter extends RouteAbstract {
   @override
   Map<String, PageFuncType> routes;
 
-  EasyRoute(this.routes);
+  HiRouter(this.routes);
 
   RoutePageInfo? currentPage;
   late Function(RoutePageInfo pageInfo) _pushPageInfoCallback;

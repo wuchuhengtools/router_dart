@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../hi_router.dart';
 
-class AppRouterDelegate extends RouterDelegate<EasyRoute>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<EasyRoute> {
+class AppRouterDelegate extends RouterDelegate<HiRouter>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<HiRouter> {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
   Map<num, String> pageTrackIndexMapRoute = {};
@@ -15,7 +15,7 @@ class AppRouterDelegate extends RouterDelegate<EasyRoute>
   /// 替换当前最新的页面
   RoutePageInfo? replaceCurrentPageInfo;
 
-  final EasyRoute appRoutePath;
+  final HiRouter appRoutePath;
 
   Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
 
@@ -35,7 +35,7 @@ class AppRouterDelegate extends RouterDelegate<EasyRoute>
   }
 
   @override
-  EasyRoute get currentConfiguration {
+  HiRouter get currentConfiguration {
     return appRoutePath;
   }
 
@@ -122,7 +122,7 @@ class AppRouterDelegate extends RouterDelegate<EasyRoute>
 
   // 系统路由改变回调，如浏览器url改变
   @override
-  Future<void> setNewRoutePath(EasyRoute path) async {
+  Future<void> setNewRoutePath(HiRouter path) async {
     print(path);
     return;
   }
