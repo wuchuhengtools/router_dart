@@ -17,6 +17,11 @@ The system's navigator page management and the system's routing are not unified,
 
 ## Features
 
+## install 
+``` bash
+ $ flutter pub add hi_router
+```
+
 # Manage the page by routing.
 
 ## Usage
