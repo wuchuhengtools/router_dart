@@ -73,6 +73,8 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
     return true;
   }
 
+  static Future<RoutePageInfo>? firstTimeBeforeCall;
+
   @override
   Widget build(BuildContext context) {
     if (pageTrack.isEmpty) {
@@ -81,8 +83,12 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
       // 加载首页时，回调before周期
       if (before != null) {
         String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
+        firstTimeBeforeCall ??=
+            before!(appRoutePath.getRoutePageByRoute(currentRoute));
+        ;
+
         return FutureBuilder(
-            future: before!(appRoutePath.getRoutePageByRoute(currentRoute)),
+            future: firstTimeBeforeCall,
             builder:
                 (BuildContext context, AsyncSnapshot<RoutePageInfo> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
