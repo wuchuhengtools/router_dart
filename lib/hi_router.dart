@@ -1,6 +1,7 @@
 library hi_router;
 
 import 'package:flutter/material.dart';
+import 'package:hi_router/pages/loading_page.dart';
 import 'route/route_abstract.dart';
 import 'pages/unknown_page.dart';
 import 'route/app_route_information_parser.dart';
@@ -17,6 +18,9 @@ class HiRouter extends RouteAbstract {
 
   /// 要跳转的路由
   String? _jumpRoute;
+
+  // 加载页面
+  Widget loadingPage = const LoadingPage();
 
   void setJumpRoute(String newJumpRoute) {
     _jumpRoute = newJumpRoute;
@@ -62,12 +66,16 @@ class HiRouter extends RouteAbstract {
 
   Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
 
+  void setLoadingPage(Widget page) {
+    loadingPage = page;
+  }
+
   /// 构建路由route
   Widget build(BuildContext context, String title) {
     print("build");
     return MaterialApp.router(
       title: title,
-      routerDelegate: AppRouterDelegate(this, before),
+      routerDelegate: AppRouterDelegate(this, before, loadingPage),
       routeInformationParser: AppRouteInformationParser(this),
     );
   }

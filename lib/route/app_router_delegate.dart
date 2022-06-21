@@ -1,7 +1,7 @@
-import 'route_abstract.dart';
 import 'package:flutter/material.dart';
 
 import '../hi_router.dart';
+import 'route_abstract.dart';
 
 class AppRouterDelegate extends RouterDelegate<HiRouter>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<HiRouter> {
@@ -19,7 +19,9 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
 
   Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
 
-  AppRouterDelegate(this.appRoutePath, this.before)
+  Widget defaultLoadingPage;
+
+  AppRouterDelegate(this.appRoutePath, this.before, this.defaultLoadingPage)
       : navigatorKey = GlobalKey<NavigatorState>() {
     appRoutePath.registerPushCallback((RoutePageInfo pageInfo) {
       if (before != null) {
@@ -76,6 +78,20 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
     if (pageTrack.isEmpty) {
       var defaultPage = appRoutePath.currentPage!;
       registerTrackIndex(defaultPage);
+      // 加载首页时，回调before周期
+      if (before != null) {
+        String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
+        return FutureBuilder(
+            future: before!(appRoutePath.getRoutePageByRoute(currentRoute)),
+            builder:
+                (BuildContext context, AsyncSnapshot<RoutePageInfo> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return build(context);
+              } else {
+                return defaultLoadingPage;
+              }
+            });
+      }
     }
     // 入栈新路由
     if (pushPageInfo != null) {
