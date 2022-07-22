@@ -71,12 +71,12 @@ class HiRouter extends RouteAbstract {
   }
 
   /// 构建路由route
-  Widget build(BuildContext context, String title) {
-    print("build");
-    return MaterialApp.router(
-      title: title,
-      routerDelegate: AppRouterDelegate(this, before, loadingPage),
-      routeInformationParser: AppRouteInformationParser(this),
-    );
-  }
+    Widget build(BuildContext context, String title, ThemeData? themeData) {
+        return MaterialApp.router(
+            title: title,
+            theme: themeData,
+            routerDelegate: AppRouterDelegate(this, before, loadingPage),
+            routeInformationParser: AppRouteInformationParser(this),
+        );
+    }
 }
