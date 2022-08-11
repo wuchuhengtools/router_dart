@@ -74,6 +74,7 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
   }
 
   static Future<RoutePageInfo>? firstTimeBeforeCall;
+  bool _isCallBefore = false;
 
   @override
   Widget build(BuildContext context) {
@@ -81,22 +82,22 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
       var defaultPage = appRoutePath.currentPage!;
       registerTrackIndex(defaultPage);
       // 加载首页时，回调before周期
-      if (before != null) {
+      if (before != null && !_isCallBefore) {
+        _isCallBefore = !_isCallBefore;
         String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
-        firstTimeBeforeCall ??=
-            before!(appRoutePath.getRoutePageByRoute(currentRoute));
-        ;
+        firstTimeBeforeCall ??= before!(appRoutePath.getRoutePageByRoute(currentRoute));
 
         return FutureBuilder(
-            future: firstTimeBeforeCall,
-            builder:
-                (BuildContext context, AsyncSnapshot<RoutePageInfo> snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return build(context);
-              } else {
-                return defaultLoadingPage;
-              }
-            });
+          future: firstTimeBeforeCall,
+          builder: (BuildContext context, AsyncSnapshot<RoutePageInfo> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              replaceCurrentPageInfo = snapshot.data;
+              return build(context);
+            } else {
+              return defaultLoadingPage;
+            }
+          },
+        );
       }
     }
     // 入栈新路由
