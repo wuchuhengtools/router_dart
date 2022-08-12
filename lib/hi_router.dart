@@ -2,10 +2,12 @@ library hi_router;
 
 import 'package:flutter/material.dart';
 import 'package:hi_router/pages/loading_page.dart';
-import 'route/route_abstract.dart';
+import 'package:hi_router/services/custom_material_app.dart';
+
 import 'pages/unknown_page.dart';
 import 'route/app_route_information_parser.dart';
 import 'route/app_router_delegate.dart';
+import 'route/route_abstract.dart';
 
 class HiRouter extends RouteAbstract {
   @override
@@ -38,8 +40,7 @@ class HiRouter extends RouteAbstract {
   }
 
   /// 注册声明匹配的路由
-  RoutePageInfo registerUnknownPage =
-      RoutePageInfo('/404', () => UnknownPage());
+  RoutePageInfo registerUnknownPage = RoutePageInfo('/404', () => UnknownPage());
 
   @override
   RoutePageInfo createUnknownPage() {
@@ -47,9 +48,7 @@ class HiRouter extends RouteAbstract {
   }
 
   void setPageByLocation(String location) {
-    currentPage = routes.containsKey(location)
-        ? RoutePageInfo(location, routes[location]!)
-        : createUnknownPage();
+    currentPage = routes.containsKey(location) ? RoutePageInfo(location, routes[location]!) : createUnknownPage();
   }
 
   /// 注册路由导航回调
@@ -71,12 +70,22 @@ class HiRouter extends RouteAbstract {
   }
 
   /// 构建路由route
-    Widget build(BuildContext context, String title, ThemeData? themeData) {
-        return MaterialApp.router(
-            title: title,
-            theme: themeData,
-            routerDelegate: AppRouterDelegate(this, before, loadingPage),
-            routeInformationParser: AppRouteInformationParser(this),
-        );
-    }
+  Widget build(
+    BuildContext context, {
+    required String title,
+    ThemeData? theme,
+    TransitionBuilder? builder,
+    List<NavigatorObserver>? navigatorObservers,
+  }) {
+    final MaterialApp res = CustomerMaterialApp.router(
+      builder: builder,
+      title: title,
+      theme: theme,
+      routerDelegate: AppRouterDelegate(this, before, loadingPage),
+      routeInformationParser: AppRouteInformationParser(this),
+      navigatorObservers: navigatorObservers,
+    );
+
+    return res;
+  }
 }
