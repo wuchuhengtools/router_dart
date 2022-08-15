@@ -75,9 +75,15 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
 
   static Future<RoutePageInfo>? firstTimeBeforeCall;
   bool _isCallBefore = false;
+  static int buldCount = 0;
 
   @override
   Widget build(BuildContext context) {
+    /// todo 好乱啊，这代码，完全不知道有什么意义, 但它就是生效了
+    if (buldCount < 1) {
+      buldCount++;
+      return defaultLoadingPage;
+    }
     if (pageTrack.isEmpty) {
       var defaultPage = appRoutePath.currentPage!;
       registerTrackIndex(defaultPage);
@@ -85,7 +91,7 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
       if (before != null && !_isCallBefore) {
         _isCallBefore = !_isCallBefore;
         String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
-        firstTimeBeforeCall ??= before!(appRoutePath.getRoutePageByRoute(currentRoute));
+        firstTimeBeforeCall = before!(appRoutePath.getRoutePageByRoute(currentRoute));
 
         return FutureBuilder(
           future: firstTimeBeforeCall,
