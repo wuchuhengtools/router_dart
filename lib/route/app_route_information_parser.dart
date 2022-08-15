@@ -14,7 +14,7 @@ class AppRouteInformationParser extends RouteInformationParser<HiRouter> {
     String location = routeInformation.location!;
     // 应用已经启动，正进行路由跳转
     if (appRoutePath.currentPage != null) {
-      appRoutePath.setJumpRoute(location);
+      // appRoutePath.setJumpRoute(location);
     }
     // 首次通过路由进入应用
     appRoutePath.setPageByLocation(location);

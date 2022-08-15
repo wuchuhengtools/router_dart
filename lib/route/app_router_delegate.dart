@@ -74,37 +74,39 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
   }
 
   static Future<RoutePageInfo>? firstTimeBeforeCall;
+  static bool isCallBefore = false;
   bool _isCallBefore = false;
-  static int buldCount = 0;
+
+  beforeCallback() {
+    return FutureBuilder(
+      future: firstTimeBeforeCall,
+      builder: (BuildContext context, AsyncSnapshot<RoutePageInfo> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          replaceCurrentPageInfo = snapshot.data;
+          isCallBefore = false;
+          return build(context);
+        } else {
+          return defaultLoadingPage;
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    /// todo 好乱啊，这代码，完全不知道有什么意义, 但它就是生效了
-    if (buldCount < 1) {
-      buldCount++;
-      return defaultLoadingPage;
-    }
     if (pageTrack.isEmpty) {
       var defaultPage = appRoutePath.currentPage!;
       registerTrackIndex(defaultPage);
-      // 加载首页时，回调before周期
-      if (before != null && !_isCallBefore) {
-        _isCallBefore = !_isCallBefore;
-        String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
-        firstTimeBeforeCall = before!(appRoutePath.getRoutePageByRoute(currentRoute));
-
-        return FutureBuilder(
-          future: firstTimeBeforeCall,
-          builder: (BuildContext context, AsyncSnapshot<RoutePageInfo> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              replaceCurrentPageInfo = snapshot.data;
-              return build(context);
-            } else {
-              return defaultLoadingPage;
-            }
-          },
-        );
-      }
+    }
+    // 加载首页时，回调before周期
+    if (before != null && !_isCallBefore) {
+      _isCallBefore = !_isCallBefore;
+      String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
+      firstTimeBeforeCall = before!(appRoutePath.getRoutePageByRoute(currentRoute));
+      isCallBefore = true;
+      return beforeCallback();
+    } else if (isCallBefore) {
+      return beforeCallback();
     }
     // 入栈新路由
     if (pushPageInfo != null) {
