@@ -74,8 +74,8 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
   }
 
   static Future<RoutePageInfo>? firstTimeBeforeCall;
-  static bool isCallBefore = false;
   bool _isCallBefore = false;
+  static bool _isCallBefore1stTime = false;
 
   beforeCallback() {
     return FutureBuilder(
@@ -83,7 +83,7 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
       builder: (BuildContext context, AsyncSnapshot<RoutePageInfo> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           replaceCurrentPageInfo = snapshot.data;
-          isCallBefore = false;
+          _isCallBefore = false;
           return build(context);
         } else {
           return defaultLoadingPage;
@@ -99,13 +99,13 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
       registerTrackIndex(defaultPage);
     }
     // 加载首页时，回调before周期
-    if (before != null && !_isCallBefore) {
-      _isCallBefore = !_isCallBefore;
+    if (before != null && !_isCallBefore && !_isCallBefore1stTime) {
       String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
       firstTimeBeforeCall = before!(appRoutePath.getRoutePageByRoute(currentRoute));
-      isCallBefore = true;
+      _isCallBefore = true;
+      _isCallBefore1stTime = true;
       return beforeCallback();
-    } else if (isCallBefore) {
+    } else if (_isCallBefore && before != null) {
       return beforeCallback();
     }
     // 入栈新路由
@@ -124,10 +124,11 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
       String jumpRoute = appRoutePath.getJumpRoute()!;
       var currentPageIndex = pageTrack.length - 1;
       var currentRoute = pageTrackIndexMapRoute[currentPageIndex];
-      final void Function(String route) pushNewRoute = (String route) {
+      pushNewRoute(String route) {
         final newPage = appRoutePath.getRoutePageByRoute(route);
         registerTrackIndex(newPage);
-      };
+      }
+
       // 大于路栈大于1，则当前的系统提供的url可能是回退或前进
       if (pageTrack.length > 1) {
         String preRoute = pageTrackIndexMapRoute[pageTrack.length - 2]!;
