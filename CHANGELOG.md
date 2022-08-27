@@ -21,3 +21,7 @@
 ## 0.0.16
 
 * chore: changed package name.
+
+## 0.0.17
+
+* chore: update home page. 
