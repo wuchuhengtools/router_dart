@@ -1,4 +1,4 @@
-## what is hi_router.
+## what is wuchuheng_router.
 
 The system's navigator page management and the system's routing are not unified, while easy_router unifies the two, and manages the application interface entirely by way of routing.
 
@@ -6,7 +6,7 @@ The system's navigator page management and the system's routing are not unified,
 
 ## install 
 ``` bash
- $ flutter pub add hi_router
+ $ flutter pub add wuchuheng_router
 ```
 
 # Manage the page by routing.
@@ -15,8 +15,8 @@ The system's navigator page management and the system's routing are not unified,
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:hi_router/hi_router.dart';
-import 'package:hi_router/route/route_abstract.dart';
+import 'package:wuchuheng_router/wuchuheng_router.dart';
+import 'package:wuchuheng_router/route/route_abstract.dart';
 
 void main() {
   runApp(App());

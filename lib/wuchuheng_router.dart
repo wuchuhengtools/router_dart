@@ -1,8 +1,8 @@
-library hi_router;
+library wuchuheng_router;
 
 import 'package:flutter/material.dart';
-import 'package:hi_router/pages/loading_page.dart';
-import 'package:hi_router/services/custom_material_app.dart';
+import 'package:wuchuheng_router/pages/loading_page.dart';
+import 'package:wuchuheng_router/services/custom_material_app.dart';
 
 import 'pages/unknown_page.dart';
 import 'route/app_route_information_parser.dart';

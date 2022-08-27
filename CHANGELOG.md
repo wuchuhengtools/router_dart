@@ -17,3 +17,7 @@
 ## 0.0.15
 
 * fix: fix the issue of repeated before callbacks.
+
+## 0.0.15
+
+* chore: changed package name.

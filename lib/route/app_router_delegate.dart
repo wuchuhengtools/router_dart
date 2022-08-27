@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../hi_router.dart';
+import '../wuchuheng_router.dart';
 import 'route_abstract.dart';
 
 class AppRouterDelegate extends RouterDelegate<HiRouter>
