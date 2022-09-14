@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../wuchuheng_router.dart';
 import 'route_abstract.dart';
 
-class AppRouterDelegate extends RouterDelegate<HiRouter>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<HiRouter> {
+class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<WuchuhengRouter> {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
   Map<num, String> pageTrackIndexMapRoute = {};
@@ -15,7 +15,7 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
   /// 替换当前最新的页面
   RoutePageInfo? replaceCurrentPageInfo;
 
-  final HiRouter appRoutePath;
+  final WuchuhengRouter appRoutePath;
 
   Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
 
@@ -37,7 +37,7 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
   }
 
   @override
-  HiRouter get currentConfiguration {
+  WuchuhengRouter get currentConfiguration {
     return appRoutePath;
   }
 
@@ -51,25 +51,6 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
     if (!route.didPop(result)) {
       return false;
     }
-    pageTrack.removeLast();
-    String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
-    var currentPage = appRoutePath.getRoutePageByRoute(currentRoute);
-    // 处理返回hook的返回页面是否与当前页面不同，不同则进行替换
-    if (before != null) {
-      before!(currentPage).then((newPage) {
-        if (newPage.location == currentPage.location) {
-          appRoutePath.currentPage = currentPage;
-        } else {
-          appRoutePath.currentPage = newPage;
-          replaceCurrentPageInfo = newPage;
-        }
-        notifyListeners();
-      });
-    } else {
-      appRoutePath.currentPage = currentPage;
-      notifyListeners();
-    }
-
     return true;
   }
 
@@ -154,7 +135,7 @@ class AppRouterDelegate extends RouterDelegate<HiRouter>
 
   // 系统路由改变回调，如浏览器url改变
   @override
-  Future<void> setNewRoutePath(HiRouter path) async {
+  Future<void> setNewRoutePath(WuchuhengRouter path) async {
     print(path);
     return;
   }

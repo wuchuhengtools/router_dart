@@ -9,11 +9,15 @@ import 'route/app_route_information_parser.dart';
 import 'route/app_router_delegate.dart';
 import 'route/route_abstract.dart';
 
-class HiRouter extends RouteAbstract {
+class WuchuhengRouter extends RouteAbstract {
   @override
   Map<String, PageFuncType> routes;
 
-  HiRouter(this.routes);
+  late AppRouterDelegate appRouterDelegate;
+
+  WuchuhengRouter(this.routes) {
+    appRouterDelegate = AppRouterDelegate(this, before, loadingPage);
+  }
 
   RoutePageInfo? currentPage;
   late Function(RoutePageInfo pageInfo) _pushPageInfoCallback;
@@ -63,6 +67,26 @@ class HiRouter extends RouteAbstract {
     _pushPageInfoCallback(pageInfo);
   }
 
+  /// 路由回跳
+  Future<void> pop(BuildContext context) async {
+    appRouterDelegate.pageTrack.removeLast();
+    String currentRoute = appRouterDelegate.pageTrackIndexMapRoute[appRouterDelegate.pageTrack.length - 1]!;
+    var currentPage = appRouterDelegate.appRoutePath.getRoutePageByRoute(currentRoute);
+    // 处理返回hook的返回页面是否与当前页面不同，不同则进行替换
+    if (before != null) {
+      final newPage = await before!(currentPage);
+      if (newPage.location == currentPage.location) {
+        appRouterDelegate.appRoutePath.currentPage = currentPage;
+      } else {
+        appRouterDelegate.appRoutePath.currentPage = newPage;
+        appRouterDelegate.replaceCurrentPageInfo = newPage;
+      }
+    } else {
+      appRouterDelegate.appRoutePath.currentPage = currentPage;
+    }
+    Navigator.pop(context);
+  }
+
   Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
 
   void setLoadingPage(Widget page) {
@@ -77,11 +101,12 @@ class HiRouter extends RouteAbstract {
     TransitionBuilder? builder,
     List<NavigatorObserver>? navigatorObservers,
   }) {
+    appRouterDelegate = AppRouterDelegate(this, before, loadingPage);
     final MaterialApp res = CustomerMaterialApp.router(
       builder: builder,
       title: title,
       theme: theme,
-      routerDelegate: AppRouterDelegate(this, before, loadingPage),
+      routerDelegate: appRouterDelegate,
       routeInformationParser: AppRouteInformationParser(this),
       navigatorObservers: navigatorObservers,
     );

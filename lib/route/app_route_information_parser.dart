@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 
 import '../wuchuheng_router.dart';
 
-class AppRouteInformationParser extends RouteInformationParser<HiRouter> {
-  final HiRouter appRoutePath;
+class AppRouteInformationParser extends RouteInformationParser<WuchuhengRouter> {
+  final WuchuhengRouter appRoutePath;
 
   AppRouteInformationParser(this.appRoutePath);
 
   /// app首次启动时，解析浏览器的url
   @override
-  Future<HiRouter> parseRouteInformation(RouteInformation routeInformation) async {
+  Future<WuchuhengRouter> parseRouteInformation(RouteInformation routeInformation) async {
     String location = routeInformation.location!;
     // 应用已经启动，正进行路由跳转
     if (appRoutePath.currentPage != null) {
@@ -22,7 +22,7 @@ class AppRouteInformationParser extends RouteInformationParser<HiRouter> {
   }
 
   @override
-  RouteInformation restoreRouteInformation(HiRouter path) {
+  RouteInformation restoreRouteInformation(WuchuhengRouter path) {
     String location = appRoutePath.currentPage!.location;
     return RouteInformation(location: location);
   }
