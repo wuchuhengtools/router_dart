@@ -100,10 +100,12 @@ class WuchuhengRouter extends RouteAbstract {
     ThemeData? theme,
     TransitionBuilder? builder,
     List<NavigatorObserver>? navigatorObservers,
+    bool debugShowCheckedModeBanner = false,
   }) {
     appRouterDelegate = AppRouterDelegate(this, before, loadingPage);
     final MaterialApp res = CustomerMaterialApp.router(
       builder: builder,
+      debugShowCheckedModeBanner: debugShowCheckedModeBanner,
       title: title,
       theme: theme,
       routerDelegate: appRouterDelegate,
