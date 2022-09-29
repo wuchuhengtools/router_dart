@@ -13,9 +13,17 @@ class WuchuhengRouter extends RouteAbstract {
   @override
   Map<String, PageFuncType> routes;
 
+  // 加载页面
+  Widget loadingPage;
+  Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
+
   late AppRouterDelegate appRouterDelegate;
 
-  WuchuhengRouter(this.routes) {
+  WuchuhengRouter(
+    this.routes, {
+    this.loadingPage = const LoadingPage(),
+    this.before,
+  }) {
     appRouterDelegate = AppRouterDelegate(this, before, loadingPage);
   }
 
@@ -24,9 +32,6 @@ class WuchuhengRouter extends RouteAbstract {
 
   /// 要跳转的路由
   String? _jumpRoute;
-
-  // 加载页面
-  Widget loadingPage = const LoadingPage();
 
   void setJumpRoute(String newJumpRoute) {
     _jumpRoute = newJumpRoute;
@@ -86,8 +91,6 @@ class WuchuhengRouter extends RouteAbstract {
     }
     Navigator.pop(context);
   }
-
-  Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
 
   void setLoadingPage(Widget page) {
     loadingPage = page;

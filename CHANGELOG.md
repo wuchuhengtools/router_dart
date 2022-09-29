@@ -33,3 +33,7 @@
 ## 0.0.19
 
 * feat: add the API to pop route.
+
+## 0.0.20
+
+* feat: adding new parameters to the initialization.
