@@ -37,3 +37,7 @@
 ## 0.0.20
 
 * feat: adding new parameters to the initialization.
+
+## 0.0.21
+
+* docs: update README.md and example.

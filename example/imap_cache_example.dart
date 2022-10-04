@@ -17,19 +17,21 @@ class _HomePage extends StatelessWidget {
   Widget build(BuildContext context) => const Text('home page');
 }
 
-void main() async {}
+final WuchuhengRouter route = WuchuhengRouter(
+  {
+    '/': () => HomePage(),
+  },
+  before: (RoutePageInfo pageInfo) async => pageInfo,
+);
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    final WuchuhengRouter route = WuchuhengRouter(
-      {
-        '/': () => HomePage(),
-      },
-      before: (RoutePageInfo pageInfo) async => pageInfo,
-    );
     return route.build(context, title: 'snotes');
   }
+}
+
+void main() async {
+  runApp(const App());
 }
