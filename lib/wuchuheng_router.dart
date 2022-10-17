@@ -1,6 +1,7 @@
 library wuchuheng_router;
 
 import 'package:flutter/material.dart';
+import 'package:wuchuheng_router/exceptions/not_found_exception.dart';
 import 'package:wuchuheng_router/pages/loading_page.dart';
 import 'package:wuchuheng_router/services/custom_material_app.dart';
 
@@ -9,9 +10,11 @@ import 'route/app_route_information_parser.dart';
 import 'route/app_router_delegate.dart';
 import 'route/route_abstract.dart';
 
+export 'package:wuchuheng_router/route/route_abstract.dart';
+
 class WuchuhengRouter extends RouteAbstract {
   @override
-  Map<String, PageFuncType> routes;
+  List<RoutePageInfo> routes;
 
   // 加载页面
   Widget loadingPage;
@@ -56,8 +59,14 @@ class WuchuhengRouter extends RouteAbstract {
     return registerUnknownPage;
   }
 
-  void setPageByLocation(String location) {
-    currentPage = routes.containsKey(location) ? RoutePageInfo(location, routes[location]!) : createUnknownPage();
+  void setPageByPath(String path) {
+    for (var element in routes) {
+      if (element.path == path) {
+        currentPage = element;
+        return;
+      }
+    }
+    throw NotFoundException();
   }
 
   /// 注册路由导航回调
@@ -80,7 +89,7 @@ class WuchuhengRouter extends RouteAbstract {
     // 处理返回hook的返回页面是否与当前页面不同，不同则进行替换
     if (before != null) {
       final newPage = await before!(currentPage);
-      if (newPage.location == currentPage.location) {
+      if (newPage.path == currentPage.path) {
         appRouterDelegate.appRoutePath.currentPage = currentPage;
       } else {
         appRouterDelegate.appRoutePath.currentPage = newPage;

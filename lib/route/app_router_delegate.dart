@@ -44,7 +44,7 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
   /// 入栈并登记页面的路由
   registerTrackIndex(RoutePageInfo page) {
     pageTrack = [...pageTrack, page.pageFunc()];
-    pageTrackIndexMapRoute[pageTrack.length - 1] = page.location;
+    pageTrackIndexMapRoute[pageTrack.length - 1] = page.path;
   }
 
   bool handlePopPage(Route<dynamic> route, dynamic result) {
@@ -79,15 +79,17 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
       var defaultPage = appRoutePath.currentPage!;
       registerTrackIndex(defaultPage);
     }
-    // 加载首页时，回调before周期
-    if (before != null && !_isCallBefore && !_isCallBefore1stTime) {
-      String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
-      firstTimeBeforeCall = before!(appRoutePath.getRoutePageByRoute(currentRoute));
-      _isCallBefore = true;
-      _isCallBefore1stTime = true;
-      return beforeCallback();
-    } else if (_isCallBefore && before != null) {
-      return beforeCallback();
+    // 回调路由守卫
+    if (before != null) {
+      if (!_isCallBefore && !_isCallBefore1stTime) {
+        String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
+        firstTimeBeforeCall = before!(appRoutePath.getRoutePageByRoute(currentRoute));
+        _isCallBefore = true;
+        _isCallBefore1stTime = true;
+        return beforeCallback();
+      } else if (_isCallBefore) {
+        return beforeCallback();
+      }
     }
     // 入栈新路由
     if (pushPageInfo != null) {

@@ -16,14 +16,14 @@ class AppRouteInformationParser extends RouteInformationParser<WuchuhengRouter> 
       // appRoutePath.setJumpRoute(location);
     }
     // 首次通过路由进入应用
-    appRoutePath.setPageByLocation(location);
+    appRoutePath.setPageByPath(location);
 
     return appRoutePath;
   }
 
   @override
   RouteInformation restoreRouteInformation(WuchuhengRouter path) {
-    String location = appRoutePath.currentPage!.location;
+    String location = appRoutePath.currentPage!.path;
     return RouteInformation(location: location);
   }
 }
