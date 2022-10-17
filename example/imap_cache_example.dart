@@ -18,9 +18,9 @@ class _HomePage extends StatelessWidget {
 }
 
 final WuchuhengRouter route = WuchuhengRouter(
-  {
-    '/': () => HomePage(),
-  },
+  [
+    RoutePageInfo('/', () => HomePage()),
+  ],
   before: (RoutePageInfo pageInfo) async => pageInfo,
 );
 
