@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  wuchuheng_hooks: ^0.0.6
 
 dev_dependencies:
   flutter_test:

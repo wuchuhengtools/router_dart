@@ -19,10 +19,7 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
 
   Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
 
-  Widget defaultLoadingPage;
-
-  AppRouterDelegate(this.appRoutePath, this.before, this.defaultLoadingPage)
-      : navigatorKey = GlobalKey<NavigatorState>() {
+  AppRouterDelegate(this.appRoutePath, this.before) : navigatorKey = GlobalKey<NavigatorState>() {
     appRoutePath.registerPushCallback((RoutePageInfo pageInfo) {
       if (before != null) {
         before!(pageInfo).then((newPageInfo) {
@@ -62,12 +59,23 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
     return FutureBuilder(
       future: firstTimeBeforeCall,
       builder: (BuildContext context, AsyncSnapshot<RoutePageInfo> snapshot) {
+        appRoutePath.loadingHook.set(snapshot.connectionState == ConnectionState.done);
         if (snapshot.connectionState == ConnectionState.done) {
           replaceCurrentPageInfo = snapshot.data;
           _isCallBefore = false;
-          return build(context);
+
+          return build2(context);
         } else {
-          return defaultLoadingPage;
+          if (!_isCallBefore1stTime) {
+            _isCallBefore1stTime = true;
+            return appRoutePath.initLoadingPage;
+          } else {
+            return Navigator(
+              key: navigatorKey,
+              pages: pageTrack,
+              onPopPage: handlePopPage,
+            );
+          }
         }
       },
     );
@@ -85,12 +93,16 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
         String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
         firstTimeBeforeCall = before!(appRoutePath.getRoutePageByRoute(currentRoute));
         _isCallBefore = true;
-        _isCallBefore1stTime = true;
         return beforeCallback();
       } else if (_isCallBefore) {
         return beforeCallback();
       }
     }
+
+    return build2(context);
+  }
+
+  Widget build2(BuildContext context) {
     // 入栈新路由
     if (pushPageInfo != null) {
       registerTrackIndex(pushPageInfo!);

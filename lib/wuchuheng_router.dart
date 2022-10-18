@@ -1,11 +1,11 @@
 library wuchuheng_router;
 
 import 'package:flutter/material.dart';
+import 'package:wuchuheng_hooks/wuchuheng_hooks.dart';
 import 'package:wuchuheng_router/exceptions/not_found_exception.dart';
 import 'package:wuchuheng_router/pages/loading_page.dart';
 import 'package:wuchuheng_router/services/custom_material_app.dart';
 
-import 'pages/unknown_page.dart';
 import 'route/app_route_information_parser.dart';
 import 'route/app_router_delegate.dart';
 import 'route/route_abstract.dart';
@@ -16,18 +16,20 @@ class WuchuhengRouter extends RouteAbstract {
   @override
   List<RoutePageInfo> routes;
 
+  Hook<bool> loadingHook = Hook(false);
+
   // 加载页面
-  Widget loadingPage;
   Future<RoutePageInfo> Function(RoutePageInfo pageInfo)? before;
 
   late AppRouterDelegate appRouterDelegate;
+  final Widget initLoadingPage;
 
   WuchuhengRouter(
     this.routes, {
-    this.loadingPage = const LoadingPage(),
     this.before,
+    this.initLoadingPage = const LoadingPage(),
   }) {
-    appRouterDelegate = AppRouterDelegate(this, before, loadingPage);
+    appRouterDelegate = AppRouterDelegate(this, before);
   }
 
   RoutePageInfo? currentPage;
@@ -49,14 +51,6 @@ class WuchuhengRouter extends RouteAbstract {
       return _jumpRoute;
     }
     return null;
-  }
-
-  /// 注册声明匹配的路由
-  RoutePageInfo registerUnknownPage = RoutePageInfo('/404', () => UnknownPage());
-
-  @override
-  RoutePageInfo createUnknownPage() {
-    return registerUnknownPage;
   }
 
   void setPageByPath(String path) {
@@ -101,10 +95,6 @@ class WuchuhengRouter extends RouteAbstract {
     Navigator.pop(context);
   }
 
-  void setLoadingPage(Widget page) {
-    loadingPage = page;
-  }
-
   /// 构建路由route
   Widget build(
     BuildContext context, {
@@ -114,7 +104,7 @@ class WuchuhengRouter extends RouteAbstract {
     List<NavigatorObserver>? navigatorObservers,
     bool debugShowCheckedModeBanner = false,
   }) {
-    appRouterDelegate = AppRouterDelegate(this, before, loadingPage);
+    appRouterDelegate = AppRouterDelegate(this, before);
     final MaterialApp res = CustomerMaterialApp.router(
       builder: builder,
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
