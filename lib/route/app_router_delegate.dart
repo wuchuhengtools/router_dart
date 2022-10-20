@@ -73,7 +73,6 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
 
   @override
   Widget build(BuildContext context) {
-    print("build");
     if (pageTrack.isEmpty) {
       var defaultPage = appRoutePath.currentPage!;
       registerTrackIndex(defaultPage);

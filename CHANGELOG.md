@@ -41,3 +41,8 @@
 ## 0.0.21
 
 * docs: update README.md and example.
+
+## 0.0.22
+
+* feat: simplify the code.
+
