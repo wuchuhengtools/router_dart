@@ -21,15 +21,8 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
 
   AppRouterDelegate(this.appRoutePath, this.before) : navigatorKey = GlobalKey<NavigatorState>() {
     appRoutePath.registerPushCallback((RoutePageInfo pageInfo) {
-      if (before != null) {
-        before!(pageInfo).then((newPageInfo) {
-          pushPageInfo = newPageInfo;
-          notifyListeners();
-        });
-      } else {
-        pushPageInfo = pageInfo;
-        notifyListeners();
-      }
+      pushPageInfo = pageInfo;
+      notifyListeners();
     });
   }
 
@@ -52,8 +45,7 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
   }
 
   static Future<RoutePageInfo>? firstTimeBeforeCall;
-  bool _isCallBefore = false;
-  static bool _isCallBefore1stTime = false;
+  static double _callBeforeCount = 0;
 
   beforeCallback() {
     return FutureBuilder(
@@ -62,12 +54,10 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
         appRoutePath.loadingHook.set(snapshot.connectionState == ConnectionState.done);
         if (snapshot.connectionState == ConnectionState.done) {
           replaceCurrentPageInfo = snapshot.data;
-          _isCallBefore = false;
-
           return build2(context);
         } else {
-          if (!_isCallBefore1stTime) {
-            _isCallBefore1stTime = true;
+          if (_callBeforeCount < 2) {
+            _callBeforeCount++;
             return appRoutePath.initLoadingPage;
           } else {
             return Navigator(
@@ -83,31 +73,26 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
 
   @override
   Widget build(BuildContext context) {
+    print("build");
     if (pageTrack.isEmpty) {
       var defaultPage = appRoutePath.currentPage!;
       registerTrackIndex(defaultPage);
     }
-    // 回调路由守卫
-    if (before != null) {
-      if (!_isCallBefore && !_isCallBefore1stTime) {
-        String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
-        firstTimeBeforeCall = before!(appRoutePath.getRoutePageByRoute(currentRoute));
-        _isCallBefore = true;
-        return beforeCallback();
-      } else if (_isCallBefore) {
-        return beforeCallback();
-      }
-    }
-
-    return build2(context);
-  }
-
-  Widget build2(BuildContext context) {
     // 入栈新路由
     if (pushPageInfo != null) {
       registerTrackIndex(pushPageInfo!);
       pushPageInfo = null;
     }
+    // 回调路由守卫
+    if (before != null) {
+      String currentRoute = pageTrackIndexMapRoute[pageTrack.length - 1]!;
+      firstTimeBeforeCall = before!(appRoutePath.getRoutePageByRoute(currentRoute));
+      return beforeCallback();
+    }
+    return build2(context);
+  }
+
+  Widget build2(BuildContext context) {
     // 通过AppRoute before hook更换当前最新的页面
     if (replaceCurrentPageInfo != null) {
       pageTrack.removeLast();

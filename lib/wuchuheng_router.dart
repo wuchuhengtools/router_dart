@@ -16,6 +16,7 @@ class WuchuhengRouter extends RouteAbstract {
   @override
   List<RoutePageInfo> routes;
 
+  @override
   Hook<bool> loadingHook = Hook(false);
 
   // 加载页面
