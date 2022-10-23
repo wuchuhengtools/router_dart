@@ -46,3 +46,6 @@
 
 * feat: simplify the code.
 
+## 0.0.23
+
+* refactor: refactoring the code.

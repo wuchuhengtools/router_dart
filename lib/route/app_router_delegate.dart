@@ -56,8 +56,8 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
           replaceCurrentPageInfo = snapshot.data;
           return build2(context);
         } else {
+          _callBeforeCount++;
           if (_callBeforeCount < 2) {
-            _callBeforeCount++;
             return appRoutePath.initLoadingPage;
           } else {
             return Navigator(
@@ -71,8 +71,14 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
     );
   }
 
+  int buildCount = 0;
+
   @override
   Widget build(BuildContext context) {
+    buildCount++;
+    if (buildCount < 2) {
+      return appRoutePath.initLoadingPage;
+    }
     if (pageTrack.isEmpty) {
       var defaultPage = appRoutePath.currentPage!;
       registerTrackIndex(defaultPage);
@@ -134,7 +140,6 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
   // 系统路由改变回调，如浏览器url改变
   @override
   Future<void> setNewRoutePath(WuchuhengRouter path) async {
-    print(path);
     return;
   }
 }
