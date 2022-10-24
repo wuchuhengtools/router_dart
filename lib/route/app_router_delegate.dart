@@ -72,11 +72,13 @@ class AppRouterDelegate extends RouterDelegate<WuchuhengRouter>
   }
 
   int buildCount = 0;
+  static bool isInit = false;
 
   @override
   Widget build(BuildContext context) {
     buildCount++;
-    if (buildCount < 2) {
+    if (buildCount < 2 && !isInit) {
+      isInit = true;
       return appRoutePath.initLoadingPage;
     }
     if (pageTrack.isEmpty) {

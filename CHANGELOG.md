@@ -49,3 +49,8 @@
 ## 0.0.23
 
 * refactor: refactoring the code.
+
+## 0.0.24
+
+* fix: fix the issue that reloading initLoading page when hot reload.'
+
