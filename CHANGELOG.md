@@ -54,3 +54,6 @@
 
 * fix: fix the issue that reloading initLoading page when hot reload.'
 
+## 0.0.25
+
+* fix: fix the issue that repeated operations on databases when the data is empty.

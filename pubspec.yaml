@@ -1,6 +1,6 @@
 name: wuchuheng_router
 description: The system's navigator page management and the system's routing are not unified, while hi_route unifies the two, and manages the application interface entirely by way of routing.
-version: 0.0.24
+version: 0.0.25
 homepage: https://github.com/wuchuhengtools/router_dart
 
 environment:
